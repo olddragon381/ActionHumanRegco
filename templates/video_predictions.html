@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Action Predictions</title>
+</head>
+<body>
+    <h2>Video Action Predictions</h2>
+    <table border="1">
+        <tr>
+            <th>Frame Index</th>
+            <th>RandomForest Prediction</th>
+            <th>SVM Prediction</th>
+            <th>CNN Prediction</th>
+            <th>CNN+LSTM Prediction</th>
+        </tr>
+        {% for prediction in predictions %}
+        <tr>
+            <td>{{ prediction.frame_idx }}</td>
+            <td>{{ prediction.rf }}</td>
+            <td>{{ prediction.svm }}</td>
+            <td>{{ prediction.cnn }}</td>
+            <td>{{ prediction.cnn_lstm }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

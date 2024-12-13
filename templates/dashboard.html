@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action Recognition Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f4f4f4;
+            border-radius: 5px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .results h2 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #555;
+        }
+        .results ul {
+            list-style: none;
+            padding: 0;
+        }
+        .results li {
+            font-size: 16px;
+            color: #333;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Action Recognition</h1>
+        <form id="uploadForm">
+            <input type="file" name="video" accept="video/*" required>
+            <button type="submit">Upload and Predict</button>
+        </form>
+        <div class="results">
+            <h2>Prediction Results:</h2>
+            <ul id="results">
+                <li>No prediction yet.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const resultsList = document.getElementById('results');
+
+        // Mapping numbers to action labels
+        const actionMap = {
+            5: 'Walk',
+            2: 'Run',
+            4: 'Stand',
+            1: 'Jump',
+            3: 'Sit',
+            0: 'Eat'
+        };
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+
+            // Clear previous results
+            resultsList.innerHTML = "<li>Processing...</li>";
+
+            try {
+                // Send video data to server
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                // Clear previous results and display new results
+                resultsList.innerHTML = "";
+
+                for (const [model, prediction] of Object.entries(result)) {
+                    const predictedAction = actionMap[prediction] || 'Unknown';
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${model}: ${predictedAction}`;
+                    resultsList.appendChild(listItem);
+                }
+            } catch (error) {
+                resultsList.innerHTML = "<li>Error occurred while processing the video.</li>";
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
