@@ -51,7 +51,12 @@ class User(db.Model):
 @app.route('/')
 def home():
     return render_template('index.html')
-
+@app.route('/processandgetfeature')
+def processandgetfeature():
+    return render_template('processandgetfeature.html')
+@app.route('/ketquacuamohinh')
+def ketquacuamohinh():
+    return render_template('ketquacuamohinh.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -88,7 +93,7 @@ def login():
             return redirect(url_for('dashboard'))
         else:
             flash('Invalid username or password.', 'danger')
-            return redirect(url_for('home'))
+            return redirect(url_for('/'))
     return render_template('login.html')
 
 

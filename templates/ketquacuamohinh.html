@@ -43,7 +43,7 @@
     <!-- Spinner End -->
 
 
-    <!-- Navbar Start -->
+      <!-- Navbar Start -->
     <div class="container-fluid sticky-top">
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-dark p-0">
@@ -100,7 +100,7 @@
                 <div class="col-lg-5 wow fadeIn" data-wow-delay="0.1s">
                     <div class="btn btn-sm border rounded-pill text-primary px-3 mb-3">Khóa luận</div>
                     <h1 class="mb-4">Nhận diện hành động con người</h1>
-                    <p class="mb-4">Sử dụng các bước tiền xử lý video, trích xuất các đặc trựng của các frame khung hình từ đó cho bộ dữ liệu đặc trưng sau đó tiền thành train trên các mô hình như CNN, SVM, Random Forest, CNN +LSTM</p>
+                    <p class="mb-4">Sau quá trình huấn luyện và test thì thu được kết quả</p>
 
                 </div>
                 <div class="col-lg-7">
@@ -113,7 +113,7 @@
                                             <i class="fa fa-solid fa-sitemap fa-2x"></i>
                                         </div>
                                         <h5 class="mb-3">Random Forest</h5>
-                                        <p>Dùng mediapipe để nhận diện các điểm trên khung xương người rồi dùng Random Forest để nhận biết hành động đó là gì </p>
+                                        <p>Độ chính xác của mô hình là bằng 59% thấp hơn nhiều khi dùng phương pháp CNN</p>
 <!--                                        <a class="btn px-3 mt-auto mx-auto" href="">Read More</a>-->
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@
                                             <i class="fa fa-power-off fa-2x"></i>
                                         </div>
                                         <h5 class="mb-3">CNN</h5>
-                                        <p>Trích xuất các đặc trưng fourier, Optical Flow, Pose Mediapipe rồi Train trên mô hình CNN</p>
+                                        <p>Độ chính xác của mô hình là 71,9% và độ sai số là 0,842 một giá trị hoàn toàn chấp nhận được cho bộ dữ liệu rút chích đặc trưng đặc biệt này.</p>
 <!--                                        <a class="btn px-3 mt-auto mx-auto" href="">Read More</a>-->
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@
                                             <i class="fa fa-code-branch fa-2x"></i>
                                         </div>
                                         <h5 class="mb-3">SVM</h5>
-                                        <p>Trích xuất các đặc trưng fourier, Optical Flow, Pose Mediapipe rồi Train trên mô hình SVM.</p>
+                                        <p>Support Vector Machine có độ chính 36% vô cùng thấp bộ dữ liệu này không phù hợp với mô hình</p>
 <!--                                        <a class="btn px-3 mt-auto mx-auto" href="">Read More</a>-->
                                     </div>
                                 </div>
@@ -147,7 +147,7 @@
                                             <i class="fa fa-brain fa-2x"></i>
                                         </div>
                                         <h5 class="mb-3">CNN+LSTM</h5>
-                                        <p>Trích xuất các đặc trưng fourier, Optical Flow, Pose Mediapipe rồi Train trên mô hình CNN thu được features rồi dùng nó trên LSTM</p>
+                                        <p>Với độ chính xác của mô hình là 80,06% và độ sai số là 0,5959 có cải thiện khác biệt so với khi dùng phương pháp CNN. Đây một giá trị vô cùng tốt nhất từ bộ dữ liệu rút chích đặc trưng đặc biệt này.</p>
 <!--                                        <a class="btn px-3 mt-auto mx-auto" href="">Read More</a>-->
                                     </div>
                                 </div>
@@ -161,59 +161,7 @@
     <!-- Service End -->
 
 
-    <!-- Feature Start -->
-    <div class="container-fluid bg-primary feature pt-5">
-        <div class="container pt-5">
-            <div class="row g-5">
-                <div class="col-lg-6 align-self-center mb-md-5 pb-md-5 wow fadeIn" data-wow-delay="0.3s">
-                    <div class="btn btn-sm border rounded-pill text-white px-3 mb-3">Tại sao lựa chọn đề tài này</div>
-                    <h1 class="text-white mb-4">Nhận diện hành động con người</h1>
-                    <p class="text-light mb-4">Nhận diện hành động con người là 1 bài toàn lớn mang tính ứng dụng cao cho cuộc sống từ ta nhận biết được hành động con người ta có thể ứng dụng cho an ninh, đô thị thông minh, và vô vàng nhiều cách</p>
-                    <div class="d-flex align-items-center text-white mb-3">
-                        <div class="btn-sm-square bg-white text-primary rounded-circle me-3">
-                            <i class="fa fa-check"></i>
-                        </div>
-                        <span>Ứng dụng thực tiễn rộng rãi</span>
-                    </div>
-                    <div class="d-flex align-items-center text-white mb-3">
-                        <div class="btn-sm-square bg-white text-primary rounded-circle me-3">
-                            <i class="fa fa-check"></i>
-                        </div>
-                        <span>Thách thức nghiên cứu và cải tiến công nghệ</span>
-                    </div>
-                    <div class="d-flex align-items-center text-white mb-3">
-                        <div class="btn-sm-square bg-white text-primary rounded-circle me-3">
-                            <i class="fa fa-check"></i>
-                        </div>
-                        <span>Khả năng mở rộng và cải tiến</span>
-                    </div>
 
-                    <div class="d-flex align-items-center text-white mb-3">
-                        <div class="btn-sm-square bg-white text-primary rounded-circle me-3">
-                            <i class="fa fa-check"></i>
-                        </div>
-                        <span>Thách thức nghiên cứu và cải tiến công nghệ</span>
-                    </div>
-                    <div class="d-flex align-items-center text-white mb-3">
-                        <div class="btn-sm-square bg-white text-primary rounded-circle me-3">
-                            <i class="fa fa-check"></i>
-                        </div>
-                        <span>Phát triển kỹ năng chuyên môn</span>
-                    </div>
-                    <div class="d-flex align-items-center text-white mb-3">
-                        <div class="btn-sm-square bg-white text-primary rounded-circle me-3">
-                            <i class="fa fa-check"></i>
-                        </div>
-                        <span>Đáp ứng nhu cầu xã hội và công nghiệp</span>
-                    </div>
-                </div>
-                <div class="col-lg-6 align-self-end text-center text-md-end wow fadeIn" data-wow-delay="0.5s">
-                    <img class="img-fluid" src="img/feature.png" alt="">
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Feature End -->
 
 
 

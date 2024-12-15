@@ -1,12 +1,24 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
 {% block content %}
-<h1>Register</h1>
-<form method="POST">
-    <label>Username:</label>
-    <input type="text" name="username" required>
-    <label>Password:</label>
-    <input type="password" name="password" required>
-    <button type="submit">Register</button>
-</form>
+
+
+<div class="wrapper">
+    <div class="title"><span>Đăng kí</span></div>
+    <form form method="POST">
+      <div class="row">
+        <i class="fas fa-user"></i>
+        <input type="text" name="username" placeholder="Username" required />
+      </div>
+      <div class="row">
+        <i class="fas fa-lock"></i>
+        <input type="password" name="password" placeholder="Password" required/>
+      </div>
+      <div class="row button">
+        <button type="submit">Đăng kí </button>
+      </div>
+
+    </form>
+  </div>
+
 {% endblock %}
