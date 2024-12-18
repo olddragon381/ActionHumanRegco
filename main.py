@@ -22,13 +22,13 @@ app.config['ALLOWED_EXTENSIONS'] = {'avi', 'mp4', 'mov'}  # Allowed file types
 db = SQLAlchemy(app)
 
 
-rf_model = joblib.load('model/rf_model2.pkl')
-svm_model = joblib.load('model/svm_model2.pkl')
+rf_model = joblib.load('model/rf_model.pkl')
+svm_model = joblib.load('model/svm_model.pkl')
 # Mô hình CNN
-cnn_model = tensorflow.keras.models.load_model('model/cnn_model2.h5')
+cnn_model = tensorflow.keras.models.load_model('model/cnn_model.h5')
 
 # Mô hình CNN + LSTM
-cnn_lstm_model = tensorflow.keras.models.load_model('model/cnn_lstm_model2.h5')
+cnn_lstm_model = tensorflow.keras.models.load_model('model/cnn_lstm_model.h5')
 
 
 # Initialize MediaPipe Pose
@@ -106,6 +106,15 @@ def dashboard():
     else:
         flash('You need to log in first.', 'danger')
         return redirect(url_for('home'))
+
+
+@app.route('/predict1')
+def predict1():
+    return render_template('camera_predict.html')
+
+@app.route('/predict2')
+def predict2():
+    return render_template('upload_video_predict.html')
 
 
 
@@ -198,6 +207,100 @@ def predict():
 
     return jsonify(result)
 
+
+
+# Danh sách tên lớp
+labels = {0: 'Eat', 1: 'Jump', 2: 'Run', 3: 'Sit', 4: 'Stand', 5: 'Walk'}
+
+def generate_frames():
+    cap = cv2.VideoCapture(0)  # Mở camera
+    ema_landmarks1 = None  # Biến lưu trạng thái EMA
+    ema_landmarks = None  # Biến lưu trữ EMA landmarks cho RF và SVM
+
+    #
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        try:
+            # Resize frame
+            frame_resized = cv2.resize(frame, (640, 480))
+
+            # Trích xuất đặc trưng cho từng frame
+            pose_features = compute_pose_features(frame_resized)  # Trích xuất Pose features
+            ema_landmarks1, all_features = extract_all_features(ema_landmarks1,
+                                                                frame_resized)  # Trích xuất tất cả các đặc trưng
+            ema_landmarks = apply_ema(ema_landmarks, pose_features, 0.2)
+
+            all_features = all_features.reshape(1, all_features.shape[0])
+            # Dự đoán bằng RF và SVM (chỉ sử dụng Pose features)
+            rf_prediction = rf_model.predict([ema_landmarks])
+            svm_prediction = svm_model.predict([ema_landmarks])
+
+            # Dự đoán bằng CNN và CNN-LSTM (dùng tất cả các đặc trưng)
+            cnn_prediction = cnn_model.predict(np.expand_dims(all_features, axis=0))
+            cnn_lstm_prediction = cnn_lstm_model.predict(np.expand_dims(all_features, axis=0))
+
+            # Tính độ tin cậy (confidence)
+            rf_confidence = np.max(rf_prediction)
+            svm_confidence = np.max(svm_prediction)
+            cnn_confidence = np.max(cnn_prediction)
+            cnn_lstm_confidence = np.max(cnn_lstm_prediction)
+
+            # Chỉ hiển thị nhãn khi độ tin cậy > 80%
+            if rf_confidence > 0.8:
+                rf_label = labels[np.argmax(rf_prediction)]
+            else:
+                rf_label = "Uncertain"
+
+            if svm_confidence > 0.8:
+                svm_label = labels[np.argmax(svm_prediction)]
+            else:
+                svm_label = "Uncertain"
+
+            if cnn_confidence > 0.8:
+                cnn_label = labels[np.argmax(cnn_prediction)]
+            else:
+                cnn_label = "Uncertain"
+
+            if cnn_lstm_confidence > 0.8:
+                cnn_lstm_label = labels[np.argmax(cnn_lstm_prediction)]
+            else:
+                cnn_lstm_label = "Uncertain"
+
+            # Hiển thị keypoints lên frame
+            if hasattr(ema_landmarks, 'landmarks'):
+                for idx, keypoint in enumerate(ema_landmarks.landmarks):
+                    x, y, _ = keypoint
+                    if x and y:  # Kiểm tra xem điểm có tồn tại hay không
+                        cv2.circle(frame_resized, (int(x * frame_resized.shape[1]), int(y * frame_resized.shape[0])), 2,
+                                   (0, 255, 0), -1)
+
+            # Hiển thị kết quả
+            label = (f"RF: {rf_label} | SVM: {svm_label} | "
+                     f"CNN: {cnn_label} | CNN-LSTM: {cnn_lstm_label}")
+
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(frame_resized, label, (10, 50), font, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
+
+        except Exception as e:
+            print(f"Error during processing: {e}")
+
+        # Encode khung hình để stream
+        _, buffer = cv2.imencode('.jpg', frame_resized)
+        frame_bytes = buffer.tobytes()
+
+        # Trả về khung hình dưới dạng byte
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
+    cap.release()
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/logout')
 def logout():
